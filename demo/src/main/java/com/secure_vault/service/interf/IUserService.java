@@ -2,19 +2,18 @@ package com.secure_vault.service.interf;
 
 import java.util.List;
 
+import com.secure_vault.dto.UserRequestDTO;
+import com.secure_vault.dto.UserResponseDTO;
 import com.secure_vault.exceptions.UserValidationException;
-import com.secure_vault.model.User;
 
 public interface IUserService {
     
-    void create(User userToCreate) throws UserValidationException;
+    UserResponseDTO create(UserRequestDTO userToCreate) throws UserValidationException;
 
-    List<User> getAll();
+    List<UserResponseDTO> getAll();
 
-    void update(User userToUpdate) throws UserValidationException;
+    UserResponseDTO update(UserRequestDTO userToUpdate, int idUserToUpdate) throws UserValidationException;
 
-    void delete(User userToDelete) throws UserValidationException;
-
-    User findUser(int idUser) throws UserValidationException;
+    UserResponseDTO delete(int idUserToDelete) throws UserValidationException;
 
 }

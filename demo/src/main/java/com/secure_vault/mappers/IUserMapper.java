@@ -3,6 +3,7 @@ package com.secure_vault.mappers;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
+import com.secure_vault.dto.UserRequestDTO;
 import com.secure_vault.dto.UserResponseDTO;
 import com.secure_vault.model.User;
 
@@ -14,6 +15,6 @@ public interface IUserMapper {
     UserResponseDTO toResponse(User user);
 
     @Mapping(target = "id", ignore = true)
-    User toEntity(UserResponseDTO requestDTO);
+    User toEntity(UserRequestDTO requestDTO);
 
 }

@@ -1,5 +1,6 @@
 package com.secure_vault.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,9 +37,16 @@ public class SecretService implements ISecretService {
     }
 
     @Override
-    public List<Secret> getAll() {
+    public List<SecretResponseDTO> getAll() {
         
-        return secretRepository.findAll();
+        List<Secret> secrets = secretRepository.findAll();
+
+        if (secrets.isEmpty()) return new ArrayList<SecretResponseDTO>();
+
+        List<SecretResponseDTO> secretConversion = new ArrayList<SecretResponseDTO>();
+        for (Secret secret : secrets)
+            secretConversion.add(secretMapper.toResponse(secret));
+        return secretConversion;
 
     }
 
@@ -80,8 +88,7 @@ public class SecretService implements ISecretService {
 
     }
 
-    @Override
-    public Secret findSecret(int idSecret) throws SecretValidationException {
+    private Secret findSecret(int idSecret) throws SecretValidationException {
         
         if (idSecret < 0) throw new SecretValidationException("Id have an invalid format, check again");
 
