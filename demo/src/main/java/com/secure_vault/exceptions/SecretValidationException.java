@@ -1,8 +1,8 @@
 package com.secure_vault.exceptions;
 
-public class InfoNoProvidedException extends Exception {
+public class SecretValidationException extends Exception {
 
-    public InfoNoProvidedException(String message) {
+    public SecretValidationException(String message) {
         super(message);
     }
 

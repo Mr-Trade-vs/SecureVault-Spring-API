@@ -1,15 +1,17 @@
 package com.secure_vault.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data 
-@AllArgsConstructor 
 @NoArgsConstructor 
-public abstract class SecretDTO {
+@AllArgsConstructor 
+@Builder 
+public class UserResponseDTO {
     
-    private String name;
-    private String value;
+    private int id;
+    private String email;
 
 }

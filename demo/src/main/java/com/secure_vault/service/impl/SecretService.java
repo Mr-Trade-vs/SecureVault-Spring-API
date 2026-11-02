@@ -5,7 +5,10 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import com.secure_vault.dto.SecretRequestDTO;
+import com.secure_vault.dto.SecretResponseDTO;
 import com.secure_vault.exceptions.SecretValidationException;
+import com.secure_vault.mappers.ISecretMapper;
 import com.secure_vault.model.Secret;
 import com.secure_vault.repository.ISecretRepository;
 import com.secure_vault.service.interf.ISecretService;
@@ -17,12 +20,18 @@ import lombok.RequiredArgsConstructor;
 public class SecretService implements ISecretService {
 
     private final ISecretRepository secretRepository;
+    private final ISecretMapper secretMapper;
     
     @Override
-    public void create(Secret secretToAdd) throws SecretValidationException {
+    public SecretResponseDTO create(SecretRequestDTO secretToAdd) throws SecretValidationException {
         
         checkInfo(secretToAdd);
-        secretRepository.save(secretToAdd);
+        Secret secretDB = secretMapper.toEntity(secretToAdd);
+        secretDB = idGeneration(secretDB);
+        secretRepository.save(secretDB);
+
+        //Response Conversion
+        return secretMapper.toResponse(secretDB);
         
     }
 
@@ -34,28 +43,35 @@ public class SecretService implements ISecretService {
     }
 
     @Override
-    public void update(Secret secretToUpdate) throws SecretValidationException {
+    public SecretResponseDTO update(SecretRequestDTO secretToUpdate, int idSecret) throws SecretValidationException {
         
         checkInfo(secretToUpdate);
 
-        findSecret(secretToUpdate.getId());
+        findSecret(idSecret);
 
-        secretRepository.save(secretToUpdate);
+        Secret secretDB = secretMapper.toEntity(secretToUpdate);
+        secretDB.setId(idSecret);
+
+        secretRepository.save(secretDB);
+
+        //Response Conversion
+        return secretMapper.toResponse(secretDB);
         
     }
 
     @Override
-    public void delete(Secret secretToDelete) throws SecretValidationException {
-        
-        checkInfo(secretToDelete);
+    public SecretResponseDTO delete(int idSecretToDelete) throws SecretValidationException {
 
-        findSecret(secretToDelete.getId());
+        Secret secretRemove = findSecret(idSecretToDelete);
 
-        secretRepository.delete(secretToDelete);
+        secretRepository.delete(secretRemove);
+
+        //Response Conversion
+        return secretMapper.toResponse(secretRemove);
         
     }
 
-    private void checkInfo(Secret secretToCheck) throws SecretValidationException {
+    private void checkInfo(SecretRequestDTO secretToCheck) throws SecretValidationException {
 
         if (secretToCheck == null) throw new SecretValidationException("Secret is empty, info wasn't provided");
 
@@ -72,6 +88,17 @@ public class SecretService implements ISecretService {
         Optional<Secret> secretSearch = secretRepository.findById(idSecret);
 
         return secretSearch.orElseThrow(() -> new SecretValidationException("Secret is empty, info wasn't provided"));
+
+    }
+
+    private Secret idGeneration(Secret secret) {
+
+        Optional<Secret> lastSecret = secretRepository.findFirstByOrderByIdDesc();
+
+        if (lastSecret.isEmpty()) secret.setId(1);
+        else secret.setId(lastSecret.get().getId() + 1);
+
+        return secret;
 
     }
 
