@@ -16,6 +16,7 @@ public interface ISecretMapper {
     SecretResponseDTO toResponse(Secret secret);
 
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "owner", ignore = true)
     Secret toEntity(SecretRequestDTO requestDTO);
 
 }

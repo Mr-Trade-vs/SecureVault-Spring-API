@@ -29,7 +29,6 @@ public class UserService implements IUserService {
         checkInfo(userToCreate);
 
         User userDB = userMapper.toEntity(userToCreate);
-        userDB = idGeneration(userDB);
 
         userRepository.save(userDB);
 
@@ -95,17 +94,6 @@ public class UserService implements IUserService {
 
         return userSearch.orElseThrow(() -> new UserValidationException("User is empty, info wasn't provided"));
         
-    }
-
-    private User idGeneration (User user) {
-
-        Optional<User> lastUser = userRepository.findFirstByOrderByIdDesc();
-
-        if (lastUser.isEmpty()) user.setId(1);
-        else user.setId(lastUser.get().getId() + 1); 
-
-        return user;
-
     }
 
 }
