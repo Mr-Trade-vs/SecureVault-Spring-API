@@ -24,7 +24,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor 
 public class SecretController {
 
-    private ISecretService secretService;
+    private final ISecretService secretService;
 
     @GetMapping 
     public ResponseEntity<List<SecretResponseDTO>> getAll() {

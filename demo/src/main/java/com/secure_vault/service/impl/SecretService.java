@@ -28,7 +28,6 @@ public class SecretService implements ISecretService {
         
         checkInfo(secretToAdd);
         Secret secretDB = secretMapper.toEntity(secretToAdd);
-        secretDB = idGeneration(secretDB);
         secretRepository.save(secretDB);
 
         //Response Conversion
@@ -95,17 +94,6 @@ public class SecretService implements ISecretService {
         Optional<Secret> secretSearch = secretRepository.findById(idSecret);
 
         return secretSearch.orElseThrow(() -> new SecretValidationException("Secret is empty, info wasn't provided"));
-
-    }
-
-    private Secret idGeneration(Secret secret) {
-
-        Optional<Secret> lastSecret = secretRepository.findFirstByOrderByIdDesc();
-
-        if (lastSecret.isEmpty()) secret.setId(1);
-        else secret.setId(lastSecret.get().getId() + 1);
-
-        return secret;
 
     }
 
