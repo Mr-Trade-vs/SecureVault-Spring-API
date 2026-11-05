@@ -12,5 +12,7 @@ public interface IUserRepository extends JpaRepository<User, Integer> {
     
     // Could also use @Query
     Optional<User> findFirstByOrderByIdDesc();
+
+    Optional<User> findByEmail();
     
 }
